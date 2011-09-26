@@ -54,9 +54,9 @@ def main():
 		if threading.active_count() <= options.max_num_threads and len(urls) > 0:
 			threads.append(WgetThread((urls.pop(), options.LOG_REQUIRED)))
 			threads[-1].start()
-
 		while len(threads) > 0 and not threads[0].is_alive():
 			threads.pop(0)
+		time.sleep(5)
 			
 if __name__ == '__main__':
 	main()
