@@ -20,7 +20,7 @@ class WgetThread(threading.Thread):
 		self.LOG_REQUIRED = LOG_REQUIRED
 
 	def run(self):
-		print >>sys.stderr, "Start\t", self.url
+		print >>sys.stderr, "Start\t" + self.url
 
 		if self.LOG_REQUIRED:
 			logfile = tempfile.NamedTemporaryFile(prefix = 'wget-log.', 
@@ -31,9 +31,9 @@ class WgetThread(threading.Thread):
 		retcode = subprocess.call('wget -r -N -o ' + logfile + ' ' + self.url,
 								  shell=True)
 		if retcode == 0:
-			print >>sys.stderr, "DONE\t", self.url
+			print >>sys.stderr, "DONE\t" + self.url
 		else:
-			print >>sys.stderr, "ERROR\t", self.url
+			print >>sys.stderr, "ERROR\t" + self.url
 			
 def main():
 	parser = optparse.OptionParser("usage: %prog")
@@ -51,9 +51,12 @@ def main():
 	urls = args
 	threads = []
 	while len(urls) > 0 or threading.active_count() > 1:
+		# add new threads if not fully occupied
 		if threading.active_count() <= options.max_num_threads and len(urls) > 0:
 			threads.append(WgetThread((urls.pop(), options.LOG_REQUIRED)))
 			threads[-1].start()
+
+		# remove finished threads	
 		while len(threads) > 0 and not threads[0].is_alive():
 			threads.pop(0)
 		time.sleep(5)
