@@ -12,6 +12,7 @@ import optparse
 import tempfile
 import os.path
 import sys
+import time
 
 class WgetThread(threading.Thread):
 	def __init__(self, (url, LOG_REQUIRED)):
@@ -40,6 +41,9 @@ def main():
 	parser.add_option("-n", "--max-num-threads", dest="max_num_threads",
 					  default = 3, type = "int",
 					  help = "Maximum number of threads")
+	parser.add_option("-s", "--sleep", dest="sleep",
+					  default = 5, type = "int",
+					  help = "The time interval to create new process")
 	parser.add_option("-l", "--logfile",
 					  action="store_true", dest="LOG_REQUIRED", default=False,
 					  help="Output log file for each url")
@@ -52,14 +56,14 @@ def main():
 	threads = []
 	while len(urls) > 0 or threading.active_count() > 1:
 		# add new threads if not fully occupied
-		if threading.active_count() <= options.max_num_threads and len(urls) > 0:
+		while threading.active_count() <= options.max_num_threads and len(urls) > 0:
 			threads.append(WgetThread((urls.pop(), options.LOG_REQUIRED)))
 			threads[-1].start()
 
 		# remove finished threads	
 		while len(threads) > 0 and not threads[0].is_alive():
 			threads.pop(0)
-		time.sleep(5)
+		time.sleep(options.sleep)
 			
 if __name__ == '__main__':
 	main()
