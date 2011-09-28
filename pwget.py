@@ -21,7 +21,7 @@ class WgetThread(threading.Thread):
 		self.LOG_REQUIRED = LOG_REQUIRED
 
 	def run(self):
-		print >>sys.stderr, "Start\t" + self.url
+		print >>sys.stderr, time.strftime("%X %x") + "\tStart\t" + self.url
 
 		if self.LOG_REQUIRED:
 			logfile = tempfile.NamedTemporaryFile(prefix = 'wget-log.', 
@@ -32,9 +32,9 @@ class WgetThread(threading.Thread):
 		retcode = subprocess.call('wget -r -N -o ' + logfile + ' ' + self.url,
 								  shell=True)
 		if retcode == 0:
-			print >>sys.stderr, "DONE\t" + self.url
+			print >>sys.stderr, time.strftime("%X %x") + "\tDONE\t" + self.url
 		else:
-			print >>sys.stderr, "ERROR\t" + self.url
+			print >>sys.stderr, time.strftime("%X %x") + "\tERROR\t" + self.url
 			
 def main():
 	parser = optparse.OptionParser("usage: %prog")
