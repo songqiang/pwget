@@ -56,7 +56,7 @@ def main():
 	threads = []
 	while len(urls) > 0 or threading.active_count() > 1:
 		# add new threads if not fully occupied
-		while threading.active_count() <= options.max_num_threads and len(urls) > 0:
+		while threading.active_count() < options.max_num_threads and len(urls) > 0:
 			threads.append(WgetThread((urls.pop(), options.LOG_REQUIRED)))
 			threads[-1].start()
 
