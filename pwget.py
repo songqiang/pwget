@@ -48,7 +48,7 @@ def main():
 						default = 3, dest="max_num_threads",
 						help = "Maximum number of threads")
 	parser.add_argument('--sleep', type = int, action="store",
-						default = 5, dest="slepp",
+						default = 5, dest="sleep",
 						help = "The time interval to create new process")
 	parse_result = parser.parse_known_args()
 	(options, args) = (parse_result[0], parse_result[1])
